@@ -35,17 +35,6 @@ function TextareaTemplate (props: TextareaTemplateProps): JSX.Element {
       getCaretPosition() !== undefined ? position = getCaretPosition() : position = 0
       props.handleAddTextarea(props.bluredIndex, buttonName, templateValue, id, position, e.target.id)
     }
-
-    // далее обрабатываем нажатие на переменные для того, чтобы добавить их в текущую textarea
-     if (id !== undefined) {
-    //   let position: number = 0
-    //   getCaretPosition() !== undefined ? position = getCaretPosition() : position = 0
-    //   setTemplateValue(templateValue?.substring(0, position) + '{' + buttonName + '}' + templateValue?.substring(position, templateValue.length))
-    //   if (textareaRef?.current !== undefined) textareaRef?.current?.focus()
-    //   setArrAdded(true) 
-    //   setCursorPosition(position)
-    console.log(getCaretPosition());
-     }
   }
 
   // функция для определения положения каретки

@@ -9,18 +9,16 @@ function App (): JSX.Element {
   // берем из localStorage arrVarNames, если нет - запишем шаблонные переменные туда
   let arrVarNames: string[] = []
 
-  // if (localStorage.getItem('arrVarNames') !== undefined) {
-    const arrVarNamesFromStorage = localStorage.getItem('arrVarNames')
-    if (arrVarNamesFromStorage !== null) {
-      arrVarNames = JSON.parse(arrVarNamesFromStorage)
-    // }
+  const arrVarNamesFromStorage = localStorage.getItem('arrVarNames')
+  if (arrVarNamesFromStorage !== null) {
+    arrVarNames = JSON.parse(arrVarNamesFromStorage)
   } else {
     localStorage.setItem('arrVarNames', JSON.stringify(['firstname', 'lastname', 'company', 'position']))
     const arrVarNamesFromStorage = localStorage.getItem('arrVarNames')
     if (arrVarNamesFromStorage !== null) {
       arrVarNames = JSON.parse(arrVarNamesFromStorage)
     }
-   }
+  }
 
   // строка шаблона сообщения
   const template: string | null = localStorage.getItem('template')

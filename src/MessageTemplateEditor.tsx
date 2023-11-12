@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback, RefObject } from 'react'
+/* eslint-disable */
+
+import React, { useState, useEffect } from 'react'
 import styles from './Styles.module.css'
 import ArrVarNamesWidget from './ArrVarNamesWidget'
 import TemplateList from './TemplateList'
@@ -21,11 +23,11 @@ export interface TextareaTemplateProps {
   bluredIndex: number
   template?: string
   buttonName?: string
-  textareaRef: React.RefObject<HTMLTextAreaElement>,
-  clicked?: boolean,
-  varClicked?: IVarParams,
-  resetButtonClicked: () => void,
-  handleClicked?: () => void,
+  textareaRef: React.RefObject<HTMLTextAreaElement>
+  clicked?: boolean
+  varClicked?: IVarParams
+  resetButtonClicked: () => void
+  handleClicked?: () => void
   handleVarClicked: () => void
 }
 
@@ -50,23 +52,23 @@ export interface InputValues {
 }
 
 export interface IParamsToAddTextarea {
-  bluredIndex: number,
-  position: number,
-  textareaId: string,
-  id?:string
+  bluredIndex: number
+  position: number
+  textareaId: string
+  id?: string
 }
 
-export interface ISetCursor{
-  idLength: number,
+export interface ISetCursor {
+  idLength: number
   textareaId: TemplateObject
 }
 
-export interface IVarParams{
-  touch: boolean,
+export interface IVarParams {
+  touch: boolean
   id: string
 }
 
-function MessageTemplateEditor(props: MessageTemplateEditorProps): JSX.Element {
+function MessageTemplateEditor (props: MessageTemplateEditorProps): JSX.Element {
   const [showPreview, setShowPreview] = useState(false)
   const initialList: TemplateObject[] = (props.template === undefined || props.template === null) ? [{ template: '', textareaRef: React.createRef() }] : JSON.parse(props.template)
   const [globalList, setGlobalList] = useState<TemplateObject[]>((props.template === undefined || props.template === null) ? [{ template: '', textareaRef: React.createRef() }] : JSON.parse(props.template))
@@ -74,10 +76,10 @@ function MessageTemplateEditor(props: MessageTemplateEditorProps): JSX.Element {
   const [obj2, setObj2] = useState<ISetCursor>()
   // state для textarea, из которой произошел blur
   const [textarea, setTextarea] = useState<TemplateObject>()
-  //state для отслеживания нажатия на conditionButton
+  // state для отслеживания нажатия на conditionButton
   const [touched, setTouched] = useState<boolean>(false)
   // state для отслеживания нажатия на одну из переменных
-  const [varTouched, setVarTouched] = useState<IVarParams>({touch:false, id:''})
+  const [varTouched, setVarTouched] = useState<IVarParams>({ touch: false, id: '' })
   const [blurOut, setBlurOut] = useState<boolean>(true)
   const [blurVarOut, setBlurVarOut] = useState<boolean>(true)
   const [paramsToAddTextarea, setParamsToAddTextarea] = useState<IParamsToAddTextarea>({ bluredIndex: 0, position: 0, textareaId: '' })
@@ -93,60 +95,57 @@ function MessageTemplateEditor(props: MessageTemplateEditorProps): JSX.Element {
     setShowPreview(false)
   }
 
-  const blured = (globalList: TemplateObject[], textareaId?: string, buttonName?: string, id?:string, position?:number, textareaId2?:string): void => {
-      setBlurOut(true)
-      setBlurVarOut(true)
-      setGlobalList(globalList)
-      if (textareaId !== undefined) {
-        const recurse = (list: TemplateObject[], callback?: () => void): void => {
-          for (let i = 0; i < list.length; i++) {
-            if (list[i].textareaRef.current?.id === textareaId) {
-              setTextarea(list[i])
+  const blured = (globalList: TemplateObject[], textareaId?: string, buttonName?: string, id?: string, position?: number, textareaId2?: string): void => {
+    setBlurOut(true)
+    setBlurVarOut(true)
+    setGlobalList(globalList)
+    if (textareaId !== undefined) {
+      const recurse = (list: TemplateObject[], callback?: () => void): void => {
+        for (let i = 0; i < list.length; i++) {
+          if (list[i].textareaRef.current?.id === textareaId) {
+            setTextarea(list[i])
+          }
+          if (list[i].ifThenElse !== undefined) {
+            if (list[i].ifThenElse?.if !== null) {
+              recurse(list[i].ifThenElse!.if!)
             }
-            if (list[i].ifThenElse !== undefined) {
-              if (list[i].ifThenElse?.if !== null) {
-                recurse(list[i].ifThenElse!.if!)
-              }
-              if (list[i].ifThenElse?.then !== null) {
-                recurse(list[i].ifThenElse!.then!)
-              }
-              if (list[i].ifThenElse?.else !== null) {
-                recurse(list[i].ifThenElse!.else!)
-              }
+            if (list[i].ifThenElse?.then !== null) {
+              recurse(list[i].ifThenElse!.then!)
+            }
+            if (list[i].ifThenElse?.else !== null) {
+              recurse(list[i].ifThenElse!.else!)
             }
           }
         }
-        recurse(globalList)
       }
-  
-      if (textareaId !== undefined) {
-        setBlurOut(false)
-      }
-      if (id !== undefined){
-        setBlurVarOut(false)
-        const recurse = (list: TemplateObject[]): void => {
-          for (let i = 0; i < list.length; i++) {
-            if (list[i].textareaRef.current?.id === textareaId2) {
-              setObj2({idLength:position!, textareaId: list[i]})
+      recurse(globalList)
+    }
+
+    if (textareaId !== undefined) {
+      setBlurOut(false)
+    }
+    if (id !== undefined) {
+      setBlurVarOut(false)
+      const recurse = (list: TemplateObject[]): void => {
+        for (let i = 0; i < list.length; i++) {
+          if (list[i].textareaRef.current?.id === textareaId2) {
+            setObj2({ idLength: position!, textareaId: list[i] })
+          }
+          if (list[i].ifThenElse !== undefined) {
+            if (list[i].ifThenElse?.if !== null) {
+              recurse(list[i].ifThenElse!.if!)
             }
-            if (list[i].ifThenElse !== undefined) {
-              if (list[i].ifThenElse?.if !== null) {
-                recurse(list[i].ifThenElse!.if!)
-              }
-              if (list[i].ifThenElse?.then !== null) {
-                recurse(list[i].ifThenElse!.then!)
-              }
-              if (list[i].ifThenElse?.else !== null) {
-                recurse(list[i].ifThenElse!.else!)
-              }
+            if (list[i].ifThenElse?.then !== null) {
+              recurse(list[i].ifThenElse!.then!)
+            }
+            if (list[i].ifThenElse?.else !== null) {
+              recurse(list[i].ifThenElse!.else!)
             }
           }
         }
-        recurse(globalList)
       }
-    
-   
- 
+      recurse(globalList)
+    }
   }
 
   const handleSetTextareaId = (buttonName: string): void => {
@@ -172,45 +171,42 @@ function MessageTemplateEditor(props: MessageTemplateEditorProps): JSX.Element {
   }
 
   // определяем, что нажали на кнопку условия
-  const handleConditionClick = () => {
-    if (blurOut === true) {
+  const handleConditionClick = (): void => {
+    if (blurOut) {
       setTouched(true)
     }
   }
 
-  
   // определяем, что нажали на одну из переменных для добавления ее в textarea
-  const handleVarClick = (id: string) => {
-    if (blurVarOut===true){
-     setVarTouched({touch:true, id:id})
+  const handleVarClick = (id: string): void => {
+    if (blurVarOut) {
+      setVarTouched({ touch: true, id })
     }
-   }
+  }
 
   // восстанавливаем кнопку на ненажатое состояние
-  const resetConditionClick = () => {
+  const resetConditionClick = (): void => {
     setTouched(false)
     setBlurOut(true)
   }
 
-  const resetVarClick = () => {
-    setVarTouched({...varTouched, touch:false})
+  const resetVarClick = (): void => {
+    setVarTouched({ ...varTouched, touch: false })
     setBlurVarOut(true)
   }
 
-  const handleSetParams = (params: IParamsToAddTextarea) => {
+  const handleSetParams = (params: IParamsToAddTextarea): void => {
     setParamsToAddTextarea(params)
   }
 
-
   useEffect(() => {
-    obj?.textareaRef.current?.focus();
+    obj?.textareaRef.current?.focus()
   }, [obj])
 
-
-  useEffect(()=>{
+  useEffect(() => {
     obj2?.textareaId.textareaRef.current?.focus()
-    obj2?.textareaId.textareaRef.current?.setSelectionRange(obj2.idLength,obj2.idLength)
-  },[obj2])
+    obj2?.textareaId.textareaRef.current?.setSelectionRange(obj2.idLength, obj2.idLength)
+  }, [obj2])
 
   useEffect(() => {
     textarea?.textareaRef.current?.focus()
@@ -241,7 +237,7 @@ function MessageTemplateEditor(props: MessageTemplateEditorProps): JSX.Element {
   )
 }
 
-function AddCondition(props: { handleConditionClick: () => void }): JSX.Element {
+function AddCondition (props: { handleConditionClick: () => void }): JSX.Element {
   return (
     <button
       id="conditionButton"

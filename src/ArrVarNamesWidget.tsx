@@ -3,7 +3,7 @@ import styles from './Styles.module.css'
 import { v4 as uuidv4 } from 'uuid'
 
 interface ArrVarNamesProps {
-  arrVarNames: string[] | null,
+  arrVarNames: string[] | null
   handleVarClick: (id: string) => void
 }
 
@@ -19,8 +19,8 @@ function ArrVarNamesWidget (props: ArrVarNamesProps): JSX.Element {
           < span key={uuidv4()}>
             <button
               className={styles.varName}
-              id={name[1]} 
-              onClick={()=>props.handleVarClick(name[1])}
+              id={name[1]}
+              onClick={() => { props.handleVarClick(name[1]) }}
               >{<i>{name[0]}</i>}
             </button>
             {name !== changedArrVarNames[changedArrVarNames.length - 1] && (
