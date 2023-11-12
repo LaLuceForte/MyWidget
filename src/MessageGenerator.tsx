@@ -1,9 +1,8 @@
 // функция для генерации сообщения
 const MessageGenerator = (templateF: any, values: any): string => {
     let generatedMessage: string = ''
-    console.log(templateF);
+  
     const recurse = (template: any, insideCondition?: boolean) => {
-
         let message: string = ""
         for (let i = 0; i < template.length; i++) {
             if (insideCondition === false) {

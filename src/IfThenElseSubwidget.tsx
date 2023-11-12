@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { IParamsToAddTextarea } from './MessageTemplateEditor'
 import { ISetCursor } from './MessageTemplateEditor'
 import { IVarParams } from './MessageTemplateEditor'
+
 const idIF = uuidv4();
 const idTHEN = uuidv4();
 const idELSE = uuidv4();
@@ -39,92 +40,11 @@ function IfThenElseSubwidget(props: IfThenElseProps) {
     } : { if: null, then: null, else: null }
 
 
-    // функция, которая срабатывает, когда происходит событие blur для textarea с логикой if (именно в момент этого события происходит сеттинг значений)
-  const bluredIF = (list: TemplateObject[], textareaId?: string, buttonName?:string,id?:string, position?:number, textareaId2?:string) => {
-    props.handleSetIfThenElse({ ...ifThenElse, if: list }, props.index!, textareaId!,buttonName!,id!,position!, textareaId2!)
-    if (textareaId2!==undefined){
-      const recurse = (list: TemplateObject[]): void => {
-        for (let i = 0; i < list.length; i++) {
-          if (list[i].textareaRef.current?.id === textareaId2) {
-            setObj2({idLength:position!, textareaId: list[i]})
-            props.setId2!({idLength:position!, textareaId: list[i]})
-          }
-          if (list[i].ifThenElse !== undefined) {
-            if (list[i].ifThenElse?.if !== null) {
-              recurse(list[i].ifThenElse!.if!)
-            }
-            if (list[i].ifThenElse?.then !== null) {
-              recurse(list[i].ifThenElse!.then!)
-            }
-            if (list[i].ifThenElse?.else !== null) {
-              recurse(list[i].ifThenElse!.else!)
-            }
-          }
-        }
-      }
-      recurse(list)
-    }
-  }
-
-  const bluredTHEN = (list: TemplateObject[], textareaId?: string, buttonName?:string,id?:string, position?:number, textareaId2?:string) => {
-    props.handleSetIfThenElse({ ...ifThenElse, then: list }, props.index!, textareaId!)
-    if (textareaId2!==undefined){
-      const recurse = (list: TemplateObject[]): void => {
-        for (let i = 0; i < list.length; i++) {
-          if (list[i].textareaRef.current?.id === textareaId2) {
-            setObj2({idLength:position!, textareaId: list[i]})
-            props.setId2!({idLength:position!, textareaId: list[i]})
-          }
-          if (list[i].ifThenElse !== undefined) {
-            if (list[i].ifThenElse?.if !== null) {
-              recurse(list[i].ifThenElse!.if!)
-            }
-            if (list[i].ifThenElse?.then !== null) {
-              recurse(list[i].ifThenElse!.then!)
-            }
-            if (list[i].ifThenElse?.else !== null) {
-              recurse(list[i].ifThenElse!.else!)
-            }
-          }
-        }
-      }
-      recurse(list)
-    }
-    
-  }
-  const bluredELSE = (list: TemplateObject[], textareaId?: string, buttonName?:string,id?:string, position?:number, textareaId2?:string) => {
-    props.handleSetIfThenElse({ ...ifThenElse, else: list }, props.index!, textareaId!)
-    if (textareaId2!==undefined){
-      const recurse = (list: TemplateObject[]): void => {
-        for (let i = 0; i < list.length; i++) {
-          if (list[i].textareaRef.current?.id === textareaId2) {
-            setObj2({idLength:position!, textareaId: list[i]})
-            props.setId2!({idLength:position!, textareaId: list[i]})
-          }
-          if (list[i].ifThenElse !== undefined) {
-            if (list[i].ifThenElse?.if !== null) {
-              recurse(list[i].ifThenElse!.if!)
-            }
-            if (list[i].ifThenElse?.then !== null) {
-              recurse(list[i].ifThenElse!.then!)
-            }
-            if (list[i].ifThenElse?.else !== null) {
-              recurse(list[i].ifThenElse!.else!)
-            }
-          }
-        }
-      }
-      recurse(list)
-    }
-    
-  }
-
-  const handleSetTextareaId = (buttonName: string) => {
-    const recurse = (list: TemplateObject[]) => {
+    const recurse = (list: TemplateObject[], textareaId2?: string, position?: number): void => {
       for (let i = 0; i < list.length; i++) {
-        if (list[i].textareaRef.current?.id === buttonName) {
-          props.setId!(list[i])
-          setObj(list[i])
+        if (list[i].textareaRef.current?.id === textareaId2) {
+          setObj2({idLength:position!, textareaId: list[i]})
+          props.setId2!({idLength:position!, textareaId: list[i]})
         }
         if (list[i].ifThenElse !== undefined) {
           if (list[i].ifThenElse?.if !== null) {
@@ -138,10 +58,54 @@ function IfThenElseSubwidget(props: IfThenElseProps) {
           }
         }
       }
+    }
+
+    // функция, которая срабатывает, когда происходит событие blur для textarea с логикой if (именно в момент этого события происходит сеттинг значений)
+  const bluredIF = (list: TemplateObject[], textareaId?: string, buttonName?:string,id?:string, position?:number, textareaId2?:string) => {
+    props.handleSetIfThenElse({ ...ifThenElse, if: list }, props.index!, textareaId!,buttonName!,id!,position!, textareaId2!)
+    if (textareaId2!==undefined){
+      recurse(list)
+    }
+  }
+
+  const bluredTHEN = (list: TemplateObject[], textareaId?: string, buttonName?:string,id?:string, position?:number, textareaId2?:string) => {
+    props.handleSetIfThenElse({ ...ifThenElse, then: list }, props.index!, textareaId!,buttonName!,id!,position!, textareaId2!)
+    if (textareaId2!==undefined){
+      recurse(list)
+    }
+    
+  }
+  const bluredELSE = (list: TemplateObject[], textareaId?: string, buttonName?:string,id?:string, position?:number, textareaId2?:string) => {
+    props.handleSetIfThenElse({ ...ifThenElse, else: list }, props.index!, textareaId!,buttonName!,id!,position!, textareaId2!)
+    if (textareaId2!==undefined){
+      recurse(list)
+    }
+    
+  }
+
+  const handleSetTextareaId = (buttonName: string) => {
+    const recurseTextArea = (list: TemplateObject[]) => {
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].textareaRef.current?.id === buttonName) {
+          props.setId!(list[i])
+          setObj(list[i])
+        }
+        if (list[i].ifThenElse !== undefined) {
+          if (list[i].ifThenElse?.if !== null) {
+            recurseTextArea(list[i].ifThenElse!.if!)
+          }
+          if (list[i].ifThenElse?.then !== null) {
+            recurseTextArea(list[i].ifThenElse!.then!)
+          }
+          if (list[i].ifThenElse?.else !== null) {
+            recurseTextArea(list[i].ifThenElse!.else!)
+          }
+        }
+      }
 
     }
 
-    recurse(props.list!)
+    recurseTextArea(props.list!)
   }
 
   const resetConditionClick = () => {
