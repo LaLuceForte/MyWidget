@@ -69,7 +69,7 @@ export interface IVarParams {
 }
 
 function MessageTemplateEditor (props: MessageTemplateEditorProps): JSX.Element {
-  const [showPreview, setShowPreview] = useState(false)
+  const [showPreview, setShowPreview] = useState(true)
   const initialList: TemplateObject[] = (props.template === undefined || props.template === null) ? [{ template: '', textareaRef: React.createRef() }] : JSON.parse(props.template)
   const [globalList, setGlobalList] = useState<TemplateObject[]>((props.template === undefined || props.template === null) ? [{ template: '', textareaRef: React.createRef() }] : JSON.parse(props.template))
   const [obj, setObj] = useState<TemplateObject>()
