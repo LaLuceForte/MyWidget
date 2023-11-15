@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 import React, { useState, useEffect } from 'react'
 import styles from './Styles.module.css'
 import ArrVarNamesWidget from './ArrVarNamesWidget'
@@ -69,7 +68,7 @@ export interface IVarParams {
 }
 
 function MessageTemplateEditor (props: MessageTemplateEditorProps): JSX.Element {
-  const [showPreview, setShowPreview] = useState(true)
+  const [showPreview, setShowPreview] = useState(false)
   const initialList: TemplateObject[] = (props.template === undefined || props.template === null) ? [{ template: '', textareaRef: React.createRef() }] : JSON.parse(props.template)
   const [globalList, setGlobalList] = useState<TemplateObject[]>((props.template === undefined || props.template === null) ? [{ template: '', textareaRef: React.createRef() }] : JSON.parse(props.template))
   const [obj, setObj] = useState<TemplateObject>()

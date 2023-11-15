@@ -4,7 +4,7 @@ import MessageTemplateEditor, { type TemplateObject } from './MessageTemplateEdi
 
 function App (): JSX.Element {
   // булевая переменная для открытия шаблона редактирования сообщениц (изначально - он закрыт)
-  const [showTemplateEditor, setShowTemplateEditor] = useState<boolean>(true)
+  const [showTemplateEditor, setShowTemplateEditor] = useState<boolean>(false)
 
   // берем из localStorage arrVarNames, если нет - запишем шаблонные переменные туда
   let arrVarNames: string[] = []

@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 import TextareaTemplate from './TextareaTemplate'
 import IfThenElseSubwidget from './IfThenElseSubwidget'
 import React, { useState, useEffect } from 'react'
