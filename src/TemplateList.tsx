@@ -29,7 +29,7 @@ function TemplateList (props: TemplateListProps): JSX.Element {
   const [list, setList] = useState<TemplateObject[]>(props.initialList)
 
   const handleAddTextarea = (bluredIndex: number, buttonName: string, template: string, id: string | undefined, position: number | undefined, textareaId: string | undefined): void => {
-    console.log(props.innerId);
+  console.log(props.innerId);
     props.handleBlured(list, undefined, undefined, id)
     if (id === undefined) {
       if (props.innerId !== '') {
@@ -246,6 +246,7 @@ function TemplateList (props: TemplateListProps): JSX.Element {
       obj2?.textareaId.textareaRef.current?.setSelectionRange(obj2.idLength, obj2.idLength)
     }
   }, [obj2])
+
 
   return (
         <>
