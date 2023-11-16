@@ -24,37 +24,7 @@ interface IfThenElseProps {
 }
 
 // подвиджет ifThenElse - добавляеь к textarea подвиджет с логикой условий
-function IfThenElseSubwidget (props: IfThenElseProps): JSX.Element {
-  let num = 0;
-  let total: number = 0;
-  const nestedRecurse = (list: TemplateObject[], globally?:boolean): void => {
-    for (let i = 0; i < list.length; i++) {
-      if (list[i].ifThenElse !== undefined) {
-        if (list[i].ifThenElse?.if !== null) {
-          if (i === props.index){
-            if (globally===true){
-              total++
-            }else{
-              num++
-            } 
-          }
-          nestedRecurse(list[i].ifThenElse!.if!,globally)
-        }
-        if (list[i].ifThenElse?.then !== null) {
-          nestedRecurse(list[i].ifThenElse!.then!,globally)
-        }
-        if (list[i].ifThenElse?.else !== null) {
-          nestedRecurse(list[i].ifThenElse!.else!,globally)
-        }
-      }
-    }
-  }
-
-  nestedRecurse(props.list!, false);
-  nestedRecurse(props.globalList!,true)
-
-let result = total-num<0?0:total-num
-   
+function IfThenElseSubwidget (props: IfThenElseProps): JSX.Element {   
   const [obj, setObj] = useState<TemplateObject>()
   const [obj2, setObj2] = useState<ISetCursor>()
   const [paramsToAddTextarea, setParamsToAddTextarea] = useState<IParamsToAddTextarea>({ bluredIndex: 0, position: 0, textareaId: '' })
@@ -153,24 +123,57 @@ let result = total-num<0?0:total-num
     obj2?.textareaId.textareaRef.current?.setSelectionRange(obj2.idLength, obj2.idLength)
   }, [obj2])
 
+  // посчитаем уровень вложенности текущего компонента для добавления этого номера в innerId, чтобы сделать его уникальным
+  let countNestedInsideComponent: number = 0;
+  // посчитаем общую вложенность компонентов на момент текущего рендеринга
+  let totalCountOfNestedComponents: number = 0;
+  // рекурсивно пройдемся по глобальному списку компонентов и локальному, чтобв посчитать вышеприведенные параметры
+  const nestedRecurse = (list: TemplateObject[], globally?:boolean): void => {
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].ifThenElse !== undefined) {
+        if (list[i].ifThenElse?.if !== null) {
+          if (i === props.index){
+            if (globally===true){
+              totalCountOfNestedComponents++
+            }else{
+              countNestedInsideComponent++
+            } 
+          }
+          nestedRecurse(list[i].ifThenElse!.if!,globally)
+        }
+        if (list[i].ifThenElse?.then !== null) {
+          nestedRecurse(list[i].ifThenElse!.then!,globally)
+        }
+        if (list[i].ifThenElse?.else !== null) {
+          nestedRecurse(list[i].ifThenElse!.else!,globally)
+        }
+      }
+    }
+  }
+
+  nestedRecurse(props.list!, false);
+  nestedRecurse(props.globalList!,true)
+
+  let additionalTextareaIndex = totalCountOfNestedComponents-countNestedInsideComponent<0?0:totalCountOfNestedComponents-countNestedInsideComponent
+
   return (
     <>
       <div className={styles.conditionFlex}>
         <div className={styles.conditionWrap}><span className={styles.condition}>IF</span></div>
         <div className={styles.textareaMini}>
-          <TemplateList params={paramsToAddTextarea} handleSetParams={handleSetParams} innerId={idIF+props.index+result} varClicked={props.varClicked} conditionClicked={props.clicked} resetVarClick = {resetVarClick} resetConditionClick={resetConditionClick} globalList={props.globalList} handleSetTextareaId={handleSetTextareaId} handleBlured={bluredIF} initialList={props.ifThenElseInitialTemplates?.if!} arrVarNames={props.arrVarNames}></TemplateList>
+          <TemplateList params={paramsToAddTextarea} handleSetParams={handleSetParams} innerId={idIF+props.index+additionalTextareaIndex} varClicked={props.varClicked} conditionClicked={props.clicked} resetVarClick = {resetVarClick} resetConditionClick={resetConditionClick} globalList={props.globalList} handleSetTextareaId={handleSetTextareaId} handleBlured={bluredIF} initialList={props.ifThenElseInitialTemplates?.if!} arrVarNames={props.arrVarNames}></TemplateList>
         </div>
       </div>
       <div className={styles.conditionFlex}>
         <div className={styles.conditionWrap}><span className={styles.condition}>THEN</span></div>
         <div className={styles.textareaMini}>
-          <TemplateList params={paramsToAddTextarea} handleSetParams={handleSetParams} innerId={idTHEN+props.index+result} varClicked={props.varClicked} conditionClicked={props.clicked} resetVarClick = {resetVarClick} resetConditionClick={resetConditionClick} globalList={props.globalList} handleSetTextareaId={handleSetTextareaId} handleBlured={bluredTHEN} initialList={props.ifThenElseInitialTemplates?.then!} arrVarNames={props.arrVarNames}></TemplateList>
+          <TemplateList params={paramsToAddTextarea} handleSetParams={handleSetParams} innerId={idTHEN+props.index+additionalTextareaIndex} varClicked={props.varClicked} conditionClicked={props.clicked} resetVarClick = {resetVarClick} resetConditionClick={resetConditionClick} globalList={props.globalList} handleSetTextareaId={handleSetTextareaId} handleBlured={bluredTHEN} initialList={props.ifThenElseInitialTemplates?.then!} arrVarNames={props.arrVarNames}></TemplateList>
         </div>
       </div>
       <div className={styles.conditionFlex}>
         <div className={styles.conditionWrap}><span className={styles.condition}>ELSE</span></div>
         <div className={styles.textareaMini}>
-          <TemplateList params={paramsToAddTextarea} handleSetParams={handleSetParams} innerId={idELSE+props.index+result} varClicked={props.varClicked} conditionClicked={props.clicked} resetVarClick = {resetVarClick} resetConditionClick={resetConditionClick} globalList={props.globalList} handleSetTextareaId={handleSetTextareaId} handleBlured={bluredELSE} initialList={props.ifThenElseInitialTemplates?.else!} arrVarNames={props.arrVarNames}></TemplateList>
+          <TemplateList params={paramsToAddTextarea} handleSetParams={handleSetParams} innerId={idELSE+props.index+additionalTextareaIndex} varClicked={props.varClicked} conditionClicked={props.clicked} resetVarClick = {resetVarClick} resetConditionClick={resetConditionClick} globalList={props.globalList} handleSetTextareaId={handleSetTextareaId} handleBlured={bluredELSE} initialList={props.ifThenElseInitialTemplates?.else!} arrVarNames={props.arrVarNames}></TemplateList>
         </div>
       </div>
 
